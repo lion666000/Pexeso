@@ -42,6 +42,10 @@ public class Card {
     public void unflip(){
         button.setText("?");
         flipped = false;
+        if (matched) {
+            button.setText(String.valueOf(id));
+            button.setDisable(true);
+        }
     }
 
     public String toString(){
