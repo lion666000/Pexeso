@@ -82,6 +82,9 @@ public class Card {
             button.setText(String.valueOf(id));
             button.setDisable(true);
         }
+        else {
+            button.setStyle("-fx-background-image: none;");
+        }
     }
 
     public String toString(){
