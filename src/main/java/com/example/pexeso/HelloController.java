@@ -135,6 +135,8 @@ public class HelloController {
         for (int i = 0; i < 8; i++){
             cardsField.add(new Card(i));
             cardsField.add(new Card(i));
+
+
         }
 
 

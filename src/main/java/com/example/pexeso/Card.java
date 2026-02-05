@@ -37,6 +37,16 @@ public class Card {
     public void flip(){
         button.setText(String.valueOf(id));
         flipped = true;
+
+
+
+
+        button.setStyle(
+                "-fx-background-image: url('" +
+                        getClass().getResource("/images/iguana.jpg").toExternalForm() +
+                        "');" +
+                        "-fx-background-size: cover;"
+        );
     }
 
     public void unflip(){
