@@ -214,6 +214,7 @@ public class HelloController {
             gridPane.add(card.getButton(), collumn, row);
             card.getButton().setOnAction(e -> handleCardClick(card));
 
+
             collumn++;
 
             if (collumn == 4){

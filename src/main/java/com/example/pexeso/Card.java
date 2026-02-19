@@ -73,7 +73,9 @@ public class Card {
                 "-fx-background-image: url('" +
                         getClass().getResource(link).toExternalForm() +
                         "');" +
+                        "-fx-background-radius: 8;" +
                         "-fx-background-size: cover;"
+
         );
     }
 
@@ -86,7 +88,7 @@ public class Card {
             button.setDisable(true);
         }
         else {
-            button.setStyle("-fx-background-image: none;");
+            button.setStyle("-fx-background-image: none;"+"-fx-background-radius: 8;");
         }
     }
 
