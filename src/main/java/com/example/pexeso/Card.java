@@ -35,7 +35,9 @@ public class Card {
     }
 
     public void flip(){
-        button.setText(String.valueOf(id));
+        //button.setText(String.valueOf(id));
+        button.setText("");
+
         flipped = true;
 
         String link = "/images/iguana.jpg";
@@ -79,7 +81,8 @@ public class Card {
         button.setText("?");
         flipped = false;
         if (matched) {
-            button.setText(String.valueOf(id));
+            //button.setText(String.valueOf(id));
+            button.setText("");
             button.setDisable(true);
         }
         else {

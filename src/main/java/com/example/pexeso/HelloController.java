@@ -2,11 +2,15 @@ package com.example.pexeso;
 
 import javafx.animation.PauseTransition;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.util.Duration;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class HelloController {
     private ArrayList<Card> cardsField = new ArrayList<Card>();
@@ -18,6 +22,8 @@ public class HelloController {
     boolean konec;
     int kolo = 1;
     Player currentPlayer = null;
+
+    int nextPlayer = 0;
 
     @FXML
     private GridPane gridPane;
@@ -32,6 +38,47 @@ public class HelloController {
     private Label player1ScoreLabel;
     @FXML
     private Label player2ScoreLabel;
+
+    @FXML
+    private Button konecButton;
+
+    @FXML
+    private void handleShowKonec() {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION, "" , ButtonType.FINISH);
+        alert.setTitle("Finito");
+        alert.setHeaderText("Konec hry");
+        alert.setContentText(
+                players.get(0).getName() + " score: " + players.get(0).getBody() + "\n" +
+                players.get(1).getName() + " score: " + players.get(1).getBody()
+        );
+
+
+
+        alert.showAndWait();
+    }
+
+    @FXML
+    private void handleKonec(){
+        System.out.println("Konec hry");
+        System.out.println(players.get(0).getName() + " : " + players.get(0).getPocetDvojic());
+        System.out.println(players.get(1).getName() + " : " + players.get(1).getPocetDvojic());
+
+        handleShowKonec();
+
+        cardsField = new ArrayList<Card>();
+        players = new ArrayList<Player>();
+
+        firstFlipped = null;
+        secondFlipped = null;
+
+        konec = false;
+        kolo = 1;
+        currentPlayer = null;
+
+
+        initialize();
+    }
+
 
     @FXML
     protected void checkMatch(Card card){
@@ -53,22 +100,32 @@ public class HelloController {
             player1ScoreLabel.setText(players.get(0).getBody() + " B");
             player2ScoreLabel.setText(players.get(1).getBody() + " B");
 
+
+
             for (Card c : cardsField) {
                 if (c.matched) {
                     konec = true;
                 }
                 else {
                     konec = false;
+                    break;
                 }
             }
 
+            //---------------------------------------------------------------------------------------------------Konec
+
             if (konec) {
-                System.out.println("Konec hry");
-                System.out.println(players.get(0).getName() + " : " + players.get(0).getPocetDvojic());
-                System.out.println(players.get(1).getName() + " : " + players.get(1).getPocetDvojic());
+                konecButton.setDisable(false);
             }
         }
         else if (firstFlipped.getId() != secondFlipped.getId()) {
+
+            if (nextPlayer == 0) {
+                nextPlayer++;
+            }
+            else {
+                nextPlayer = 0;
+            }
 
             for (Card c : cardsField) {
                 if (c == firstFlipped ||  c == secondFlipped) {
@@ -89,20 +146,15 @@ public class HelloController {
     @FXML
     protected void handleCardClick(Card card){
 
-        player1NameLabel.setText(players.get(0).getName());
-        player2NameLabel.setText(players.get(1).getName());
+        currentPlayer = players.get(nextPlayer);
 
-        if (kolo % 2 == 0){
-            currentPlayer = players.get(1); // player 2
-
-            player1NameLabel.setUnderline(false);
-            player2NameLabel.setUnderline(true);
-        }
-        else{
-            currentPlayer = players.get(0); // player 1
-
+        if (nextPlayer == 0) {
             player1NameLabel.setUnderline(true);
             player2NameLabel.setUnderline(false);
+        }
+        else{
+            player1NameLabel.setUnderline(false);
+            player2NameLabel.setUnderline(true);
         }
 
         //------------------------------------------------------------------------
@@ -139,6 +191,8 @@ public class HelloController {
 
         }
 
+        Collections.shuffle(cardsField);
+
 
     }
 
@@ -146,6 +200,9 @@ public class HelloController {
     protected void generatePlayers(){
         players.add(new Player("skibidi 1"));
         players.add(new Player("skibidi 2"));
+
+        player1NameLabel.setText(players.get(0).getName());
+        player2NameLabel.setText(players.get(1).getName());
     }
 
     @FXML
@@ -170,8 +227,16 @@ public class HelloController {
 
     @FXML
     protected void initialize() {
+        konecButton.setDisable(true);
+
+        player1ScoreLabel.setText("0 B");
+        player2ScoreLabel.setText("0 B");
+
         generateButtons();
         displayButtons();
         generatePlayers();
+
+
+        //handleShowKonec();
     }
 }
