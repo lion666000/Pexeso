@@ -70,7 +70,16 @@ public class HelloController {
         currentPlayer = null;
 
 
+
         initialize();
+
+        player1ScoreLabel.setText(players.get(0).getBody() + " B");
+        player2ScoreLabel.setText(players.get(1).getBody() + " B");
+        player3ScoreLabel.setText(players.get(2).getBody() + " B");
+
+        player1PullsLabel.setText(players.get(0).getPulls() + " Tahů");
+        player2PullsLabel.setText(players.get(1).getPulls() + " Tahů");
+        player3PullsLabel.setText(players.get(2).getPulls() + " Tahů");
     };
 
     @FXML
@@ -108,6 +117,7 @@ public class HelloController {
         konec = false;
         kolo = 1;
         currentPlayer = null;
+
 
 
         initialize();
@@ -237,7 +247,7 @@ public class HelloController {
             System.out.println(firstFlipped.getId());
 
             if (firstFlipped.getId() == 69) {
-                PauseTransition pause = new PauseTransition(Duration.seconds(1));
+                PauseTransition pause = new PauseTransition(Duration.seconds(0));
                 pause.setOnFinished(event -> handleSpecialCard(firstFlipped));
                 pause.play();
             }
