@@ -202,8 +202,8 @@ public class HelloController {
         card.setMatched(true);
         kolo++;
 
-        firstFlipped.unflip();
-        secondFlipped.unflip();
+        if (firstFlipped != null) {firstFlipped.unflip();}
+        if (secondFlipped != null) {secondFlipped.unflip();}
 
         firstFlipped = null;
         secondFlipped = null;
