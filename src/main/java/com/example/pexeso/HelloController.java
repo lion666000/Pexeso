@@ -30,17 +30,48 @@ public class HelloController {
 
     @FXML
     private Label player1NameLabel;
-
     @FXML
     private Label player2NameLabel;
+    @FXML
+    private Label player3NameLabel;
 
     @FXML
     private Label player1ScoreLabel;
     @FXML
     private Label player2ScoreLabel;
+    @FXML
+    private Label player3ScoreLabel;
+
+    @FXML
+    private Label player1PullsLabel;
+    @FXML
+    private Label player2PullsLabel;
+    @FXML
+    private Label player3PullsLabel;
 
     @FXML
     private Button konecButton;
+
+    @FXML
+    private Button resetButton;
+
+    @FXML
+    private void handleResetButton(){
+        System.err.println("Hra se resetuje");
+
+        cardsField = new ArrayList<Card>();
+        players = new ArrayList<Player>();
+
+        firstFlipped = null;
+        secondFlipped = null;
+
+        konec = false;
+        kolo = 1;
+        currentPlayer = null;
+
+
+        initialize();
+    };
 
     @FXML
     private void handleShowKonec() {
@@ -48,8 +79,9 @@ public class HelloController {
         alert.setTitle("Finito");
         alert.setHeaderText("Konec hry");
         alert.setContentText(
-                players.get(0).getName() + " score: " + players.get(0).getBody() + "\n" +
-                players.get(1).getName() + " score: " + players.get(1).getBody()
+                players.get(0).getName() + " score: " + players.get(0).getBody() + " tahy: " + players.get(0).getPulls() + "\n" +
+                players.get(1).getName() + " score: " + players.get(1).getBody() + " tahy: " + players.get(1).getPulls() + "\n" +
+                players.get(2).getName() + " score: " + players.get(2).getBody() + " tahy: " + players.get(2).getPulls()
         );
 
 
@@ -60,8 +92,10 @@ public class HelloController {
     @FXML
     private void handleKonec(){
         System.out.println("Konec hry");
-        System.out.println(players.get(0).getName() + " : " + players.get(0).getPocetDvojic());
-        System.out.println(players.get(1).getName() + " : " + players.get(1).getPocetDvojic());
+
+        for (int i = 0; i < players.size(); i++) {
+            System.out.println(players.get(i).getName() + " Body: " + players.get(i).getBody() + " Tahy: " + players.get(i).getPulls());
+        }
 
         handleShowKonec();
 
@@ -95,32 +129,24 @@ public class HelloController {
             firstFlipped = null;
             secondFlipped = null;
             kolo++;
-            currentPlayer.pridatBody();
+            currentPlayer.pridatBody(1);
+            currentPlayer.pridatDvojici();
 
             player1ScoreLabel.setText(players.get(0).getBody() + " B");
             player2ScoreLabel.setText(players.get(1).getBody() + " B");
+            player3ScoreLabel.setText(players.get(2).getBody() + " B");
+
+            player1PullsLabel.setText(players.get(0).getPulls() + " Tahů");
+            player2PullsLabel.setText(players.get(1).getPulls() + " Tahů");
+            player3PullsLabel.setText(players.get(2).getPulls() + " Tahů");
 
 
 
-            for (Card c : cardsField) {
-                if (c.matched) {
-                    konec = true;
-                }
-                else {
-                    konec = false;
-                    break;
-                }
-            }
 
-            //---------------------------------------------------------------------------------------------------Konec
-
-            if (konec) {
-                konecButton.setDisable(false);
-            }
         }
         else if (firstFlipped.getId() != secondFlipped.getId()) {
 
-            if (nextPlayer == 0) {
+            if (nextPlayer < 2) {
                 nextPlayer++;
             }
             else {
@@ -141,6 +167,44 @@ public class HelloController {
         else {
             System.out.println("Vyber dalsi");
         }
+
+        for (Card c : cardsField) {
+            if (c.matched) {
+                konec = true;
+            }
+            else {
+                konec = false;
+                break;
+            }
+        }
+
+        //---------------------------------------------------------------------------------------------------Konec
+
+        if (konec) {
+            konecButton.setDisable(false);
+        }
+    }
+
+    @FXML
+    protected void handleSpecialCard(Card card) {
+        currentPlayer.pridatBody(3);
+        currentPlayer.pridatDvojici(); // hráč má šanci otočit dě karty takže se to počítá jako tah 🦆🦆🦆🦆🦛🦛🦛🦛
+        card.setMatched(true);
+        kolo++;
+
+        firstFlipped.unflip();
+        secondFlipped.unflip();
+
+        firstFlipped = null;
+        secondFlipped = null;
+
+        player1ScoreLabel.setText(players.get(0).getBody() + " B");
+        player2ScoreLabel.setText(players.get(1).getBody() + " B");
+        player3ScoreLabel.setText(players.get(2).getBody() + " B");
+
+        player1PullsLabel.setText(players.get(0).getPulls() + " Tahů");
+        player2PullsLabel.setText(players.get(1).getPulls() + " Tahů");
+        player3PullsLabel.setText(players.get(2).getPulls() + " Tahů");
     }
 
     @FXML
@@ -151,10 +215,17 @@ public class HelloController {
         if (nextPlayer == 0) {
             player1NameLabel.setUnderline(true);
             player2NameLabel.setUnderline(false);
+            player3NameLabel.setUnderline(false);
         }
-        else{
+        else if (nextPlayer == 1) {
             player1NameLabel.setUnderline(false);
             player2NameLabel.setUnderline(true);
+            player3NameLabel.setUnderline(false);
+        }
+        else if (nextPlayer == 2) {
+            player1NameLabel.setUnderline(false);
+            player2NameLabel.setUnderline(false);
+            player3NameLabel.setUnderline(true);
         }
 
         //------------------------------------------------------------------------
@@ -164,6 +235,12 @@ public class HelloController {
             firstFlipped = card;
 
             System.out.println(firstFlipped.getId());
+
+            if (firstFlipped.getId() == 69) {
+                PauseTransition pause = new PauseTransition(Duration.seconds(1));
+                pause.setOnFinished(event -> handleSpecialCard(firstFlipped));
+                pause.play();
+            }
         }
         else if (firstFlipped != null && secondFlipped == null && firstFlipped != card) {
             card.flip();
@@ -171,9 +248,18 @@ public class HelloController {
 
             System.out.println(secondFlipped.getId());
 
-            PauseTransition pause = new PauseTransition(Duration.seconds(1));
-            pause.setOnFinished(event -> checkMatch(card));
-            pause.play();
+            if  (secondFlipped.getId() == 69) {
+                PauseTransition pause = new PauseTransition(Duration.seconds(1));
+                pause.setOnFinished(event -> handleSpecialCard(secondFlipped));
+                pause.play();
+            }
+            else {
+                PauseTransition pause = new PauseTransition(Duration.seconds(1));
+                pause.setOnFinished(event -> checkMatch(card));
+                pause.play();
+            }
+
+
 
         }
         else {
@@ -184,25 +270,26 @@ public class HelloController {
 
     @FXML
     protected void generateButtons(){
-        for (int i = 0; i < 8; i++){
+        for (int i = 0; i < 12; i++){
             cardsField.add(new Card(i));
             cardsField.add(new Card(i));
 
 
         }
+        cardsField.add(new Card(69));
 
         Collections.shuffle(cardsField);
-
-
     }
 
     @FXML
     protected void generatePlayers(){
         players.add(new Player("skibidi 1"));
         players.add(new Player("skibidi 2"));
+        players.add(new Player("skibidi 3"));
 
         player1NameLabel.setText(players.get(0).getName());
         player2NameLabel.setText(players.get(1).getName());
+        player3NameLabel.setText(players.get(2).getName());
     }
 
     @FXML
@@ -217,7 +304,7 @@ public class HelloController {
 
             collumn++;
 
-            if (collumn == 4){
+            if (collumn == 5){
                 row++;
                 collumn = 0;
             }

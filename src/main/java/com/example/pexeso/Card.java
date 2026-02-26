@@ -40,7 +40,7 @@ public class Card {
 
         flipped = true;
 
-        String link = "/images/iguana.jpg";
+        String link = "/images/x.jpg";
         switch(id){
             case 0:
                 link = "/images/ostrich.jpg";
@@ -65,6 +65,21 @@ public class Card {
                 break;
             case 7:
                 link = "/images/unnamed.jpg";
+                break;
+            case 8:
+                link = "/images/lightning.jpg";
+                break;
+            case 9:
+                link = "/images/apple.jpg";
+                break;
+            case 10:
+                link = "/images/up.jpg";
+                break;
+            case 11:
+                link = "/images/star.jpg";
+                break;
+            case 69:
+                link = "/images/special.jpg";
                 break;
         }
 

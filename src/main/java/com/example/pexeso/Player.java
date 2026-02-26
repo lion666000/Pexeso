@@ -2,7 +2,7 @@ package com.example.pexeso;
 
 public class Player {
     String name;
-    int pocetDvojic = 0;
+    int pulls = 0;
     int body = 0;
 
     public Player(String name) {
@@ -13,8 +13,8 @@ public class Player {
         return name;
     }
 
-    public int getPocetDvojic() {
-        return pocetDvojic;
+    public int getPulls() {
+        return pulls;
     }
 
     public int getBody() {
@@ -25,8 +25,8 @@ public class Player {
         this.name = name;
     }
 
-    public void setPocetDvojic(int pocetDvojic) {
-        this.pocetDvojic = pocetDvojic;
+    public void setPulls(int pulls) {
+        this.pulls = pulls;
     }
 
     public void setBody(int body) {
@@ -34,12 +34,12 @@ public class Player {
     }
 
     public int pridatDvojici() {
-        pocetDvojic++;
-        return pocetDvojic;
+        pulls++;
+        return pulls;
     }
 
-    public int pridatBody() {
-        body ++;
+    public int pridatBody(int i) {
+        body += i;
         return body;
     }
 }
